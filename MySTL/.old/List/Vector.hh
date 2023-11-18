@@ -5,20 +5,21 @@
 #include <algorithm>
 
 using namespace std;
-#ifndef D_CC
-#define D_CC
+#ifndef VECTOR_HH
+#define VECTOR_HH
+
 template<class object>
-class Vector {
+class vector {
   public:
-    explicit Vector(int n = 0)
-            :theSize(n), theCapacity(n + n?n:8)
+    explicit vector(int n = 0)
+            :theSize(n), theCapacity( n + n ? n : 8 )
     {
         p = new object[n + n?n:8];
     }
 
-    ~Vector() {delete[] p;}
+    ~vector() {delete[] p;}
 
-    Vector(const Vector& v)
+    vector(const vector& v)
             :theSize(v.theSize), theCapacity(v.theCapacity), p{nullptr}
     {
         p = new object[theCapacity];
@@ -27,8 +28,8 @@ class Vector {
         }
     }
 
-    Vector(Vector&& v)
-            :theCapacity(v.theCapacity), theSize(v.theSize), p(v.p)
+    vector(vector&& v)
+            :theSize(v.theSize),theCapacity(v.theCapacity),p(v.p)
     {
         v.theSize = 0;
         v.theCapacity = 0;
@@ -36,9 +37,9 @@ class Vector {
     }
 
 
-    Vector& operator=(const Vector& v)
+    vector& operator=(const vector& v)
     {
-        Vector copy = v;
+        vector copy = v;
         std::swap(*this, copy);
         // theSize = v.theSize;
         // theCapacity = v.theCapacity;
@@ -48,7 +49,7 @@ class Vector {
         return *this;
     }
 
-    Vector& operator=(Vector&& v)
+    vector& operator=(vector&& v)
     {
         // theSize = v.theSize;
         // theCapacity = v.theCapacity ;
@@ -59,8 +60,7 @@ class Vector {
         return *this;
     }
 
-
-    Vector(initializer_list<object> lst) {
+    vector(initializer_list<object> lst) {
         theSize = lst.size();
         object* p = new object(2*theSize);
         auto itr = lst.begin();
@@ -71,7 +71,6 @@ class Vector {
             ++i; ++itr;
         }
     }
-
 
     int size() const {return theSize;}
 
@@ -99,7 +98,7 @@ class Vector {
     {
         if(n < theCapacity) return;
 
-        object* p1 = new object(n);
+        object* p1 = new object[n];
         for(int i=0; i < theSize; ++i) {
             p1[i] = std::move(p[i]);
         }
@@ -161,27 +160,40 @@ class Vector {
 
     int ca() const { return theCapacity;}
 
-    typedef object* iterator;
-    typedef const object* const_iterator;
+    using   iterator       = object* ;
+    typedef const_iterator = const object* ;
 
     iterator begin()
     {
         return &p[0];
     }
-    iterator begin() const
-    {
-        return &p[0];
-    }
 
-    const_iterator end()
+    iterator end()
     {
         return &p[theSize];
+    }
+
+    const_iterator begin() const
+    {
+        return &p[0];
     }
 
     const_iterator end() const
     {
         return &p[theSize];
     }
+
+
+    const_iterator cbegin() const
+    {
+        return begin();
+    }
+
+    const_iterator cend() const
+    {
+        return end();
+    }
+
     // void pf()
     // {
     //     for(int i = 0; i < theSize; ++i) {
@@ -190,27 +202,9 @@ class Vector {
     // }
 
   private:
-    int theSize;
-    int theCapacity ;
+    int     theSize;
+    int     theCapacity ;
     object* p;
 };
 
 #endif
-
-int main()
-{
-
-    Vector<int> Vec;
-    Vec[3] = 99;
-    Vec.push_back(88);
-    Vector<int> Vec1;
-    Vec1 = Vec;
-    cout << "--------" << endl;
-    cout << Vec[0] << endl;
-    cout << Vec1[0] << endl;
-
-    cout << "--------" << endl;
-    cout << Vec.size() << endl;
-    cout << Vec1.size() << endl;
-    return 0;
-}

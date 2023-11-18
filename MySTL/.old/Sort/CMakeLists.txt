@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.25)
+project(Sort)
+
+set(CMAKE_CXX_COMPILER clang++)
+add_compile_options(-g -Wall) #  -O2)
+
+set(EXECUTABLE_OUTPUT_PATH ${EXEC_DIR}/Sort)
+
+add_executable( BucketSort               BucketSort.cc       )
+add_executable( CountingRadixSort        CountingRadixSort.cc)
+add_executable( HeapSort                 HeapSort.cc         )
+add_executable( InsertionSort            InsertionSort.cc    )
+add_executable( MergeSort                MergeSort.cc        )
+add_executable( QuickSelect              QuickSelect.cc      )
+add_executable( QuickSort                QuickSort.cc        )
+add_executable( QuickSort1               QuickSort1.cc       )
+add_executable( QuickSortExample         QuickSortExample.cc )
+add_executable( QuickSortTest            QuickSortTest.cc    )
+add_executable( RadixSort                RadixSort.cc        )
+add_executable( ShellSort                ShellSort.cc        )
+add_executable( UradixSort               UradixSort.cc       )

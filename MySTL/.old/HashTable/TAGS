@@ -1,0 +1,694 @@
+
+hashtable.hh,17903
+#define MYTINYSTL_HASHTABLE_H_MYTINYSTL_HASHTABLE_H_2,31
+struct m_integral_constantm_integral_constant18,381
+  static constexpr T value = v;value20,410
+using m_bool_constant = m_integral_constant<bool, b>;m_bool_constant24,464
+typedef m_bool_constant<true>  m_true_type;m_true_type26,519
+typedef m_bool_constant<false> m_false_type;m_false_type27,563
+struct is_pair final : m_false_type {};is_pair30,627
+struct is_pair<std::pair<T1, T2>> final : m_true_type{} ;is_pair33,696
+struct value_traits_imp {value_traits_imp59,1224
+    using key_type    = T;key_type60,1250
+    using mapped_type = T;mapped_type61,1277
+    using value_type  = T;value_type62,1304
+    static const key_type& get_key( const T1& value )get_key65,1355
+    static const key_type& get_value( const T1& value )get_value71,1467
+struct value_traits_imp<T, true>{value_traits_imp78,1580
+    using key_type    = typename std::remove_cv<typename T::first_type>::type;key_type80,1643
+    using mapped_type = typename T::second_type;mapped_type81,1722
+    using value_type  = T;value_type82,1771
+    static const key_type& get_key( const T1& value)get_key85,1822
+    static const value_type& get_value( const T1& value )get_value91,1939
+struct value_traits{value_traits99,2055
+    static constexpr bool is_map = is_pair<T>::value;is_map100,2076
+    using value_traits_type = value_traits_imp<T, is_map>;value_traits_type102,2131
+    using key_type    = typename value_traits_type::key_type;key_type104,2191
+    using mapped_type = typename value_traits_type::mapped_type;mapped_type105,2253
+    using value_type  = typename value_traits_type::value_type;value_type106,2318
+    static const key_type& get_key(const T1& value)get_key109,2406
+    static const key_type& get_value(const T1& value)get_value115,2544
+struct hashtableNode{hashtableNode125,2712
+    T              value;value126,2734
+    hashtableNode* next;next127,2760
+    hashtableNode( const T& n ) : value(n), next(nullptr){}hashtableNode130,2817
+    hashtableNode( const hashtableNode& node ) : value( node.value), next(node.next){}hashtableNode132,2878
+    hashtableNode( hashtableNode&& node ) : value( std::move(node.value)), next(node.next)hashtableNode133,2965
+struct iterator_base{iterator_base142,3164
+    using hashtable_type         = hashtable<T, hashFun, keyEqual>;hashtable_type143,3186
+    using base                   = iterator_base<T, hashFun, keyEqual>;base144,3254
+    using node_ptr_type          = hashtableNode<T>*;node_ptr_type145,3326
+    using contain_ptr_type       = hashtable_type*;contain_ptr_type146,3380
+    using const_node_ptr_type    = const node_ptr_type;const_node_ptr_type147,3432
+    using const_contain_ptr_type = const contain_ptr_type;const_contain_ptr_type148,3488
+    using iterator_type          = iterator<T, hashFun, keyEqual>;iterator_type149,3547
+    using const_iterator_type    = const_iterator<T, hashFun, keyEqual>;const_iterator_type150,3614
+    node_ptr_type    node_ptr;  //迭代器指向的节点node_ptr152,3688
+    contain_ptr_type hashtable_ptr; //保持与容器的连接hashtable_ptr153,3747
+    bool operator==(const base& rhs)operator ==157,3843
+    bool operator!=(const base& rhs)operator !=160,3922
+struct iterator : public iterator_base<T, hashFun, keyEqual>{iterator165,4053
+    using base                = iterator_base<T, hashFun, keyEqual>;base166,4115
+    using hashtable_type      = typename base::hashtable_type;hashtable_type167,4184
+    using iterator_type       = typename base::iterator_type;iterator_type168,4247
+    using const_iterator_type = typename base::const_iterator_type;const_iterator_type169,4309
+    using node_ptr_type       = typename base::node_ptr_type;node_ptr_type170,4377
+    using contain_ptr_type    = typename base::contain_ptr_type;contain_ptr_type171,4439
+    using value_traits_type = value_traits<T>;value_traits_type173,4505
+    using value_type        = T;value_type174,4552
+    using value_ptr_type    = value_type*;value_ptr_type175,4585
+    using value_reference   = value_type&;value_reference176,4628
+    iterator( node_ptr_type n, contain_ptr_type t )iterator183,4757
+    iterator( const iterator& rhs )iterator189,4871
+    iterator( const const_iterator_type& rhs )iterator196,4997
+    iterator& operator=( const iterator& rhs )operator =203,5134
+    iterator& operator=( const const_iterator_type& rhs )operator =213,5347
+    value_reference operator*() const { return node_ptr -> value; }operator *224,5572
+    value_ptr_type operator->() const  { return &(operator*());}operator ->226,5641
+    iterator& operator++()operator ++229,5748
+    iterator operator++(int)operator ++244,6304
+struct const_iterator : public iterator_base<T, hashFun, keyEqual> {const_iterator253,6466
+    using base                = iterator_base<T, hashFun, keyEqual>;base254,6535
+    using hashtable_type      = typename base::hashtable_type;hashtable_type255,6604
+    using iterator_type       = typename base::iterator_type;iterator_type256,6667
+    using const_iterator_type = typename base::const_iterator_type;const_iterator_type257,6729
+    using node_ptr_type       = typename base::const_node_ptr_type;node_ptr_type258,6797
+    using contain_ptr_type    = typename base::const_contain_ptr_type;contain_ptr_type259,6865
+    using value_traits_type = value_traits<T>;value_traits_type261,6937
+    using value_type        = T;value_type262,6984
+    using value_ptr_type    = const value_type*;value_ptr_type263,7017
+    using value_reference   = const value_type&;value_reference264,7066
+    const_iterator( node_ptr_type n, contain_ptr_type t )const_iterator270,7206
+    const_iterator( const iterator_type& rhs )const_iterator277,7332
+    const_iterator( const const_iterator_type & rhs )const_iterator283,7473
+    const_iterator& operator=( const iterator_type& rhs )operator =289,7621
+    const_iterator_type operator=( const const_iterator_type & rhs )operator =299,7850
+    value_reference operator*() const { return node_ptr -> value;}operator *309,8090
+    value_ptr_type operator->() const { return &(operator*()); }operator ->310,8157
+    const_iterator_type& operator++()operator ++312,8223
+    const_iterator_type operator++( int )operator ++329,8723
+struct local_iterator {local_iterator338,8878
+    using value_type      = T;value_type339,8902
+    using pointer_type    = T*;pointer_type340,8933
+    using reference_type  = T&;reference_type341,8965
+    using difference_type = std::ptrdiff_t;difference_type342,8997
+    using node_ptr_type   = hashtableNode<T>*;node_ptr_type343,9041
+    using self                      = local_iterator<T>;self345,9089
+    using local_iterator_type       = local_iterator<T>;local_iterator_type346,9146
+    using const_local_iterator_type = const_local_iterator<T>;const_local_iterator_type347,9203
+    node_ptr_type node_ptr;node_ptr349,9267
+    local_iterator( node_ptr_type n ):node_ptr(n) {}local_iterator351,9296
+    local_iterator(const local_iterator_type& rhs ):node_ptr(rhs.node_ptr) {}local_iterator353,9350
+    local_iterator(const const_local_iterator_type& rhs ): node_ptr(rhs.node_ptr) {}local_iterator355,9429
+    reference_type operator*() const { return node_ptr -> value; };operator *357,9515
+    pointer_type operator->() const { return &(operator*());}operator ->358,9583
+    self& operator++()operator ++360,9646
+    self operator++( int )operator ++367,9814
+    bool operator==( const self& rhs ) const { return node_ptr == rhs.node_ptr; }operator ==374,9916
+    bool operator!=( const self& rhs ) const { return node_ptr != rhs.node_ptr; }operator !=375,9998
+struct const_local_iterator {const_local_iterator379,10103
+    using value_type      = T;value_type380,10133
+    using pointer_type    = const T*;pointer_type381,10164
+    using reference_type  = const T&;reference_type382,10202
+    using difference_type = std::ptrdiff_t;difference_type383,10240
+    using node_ptr_type   = const hashtableNode<T>*;node_ptr_type384,10284
+    using self                      = const_local_iterator<T>;self386,10338
+    using local_iterator_type       = local_iterator<T>;local_iterator_type387,10401
+    using const_local_iterator_type = const_local_iterator<T>;const_local_iterator_type388,10458
+    node_ptr_type node_ptr;node_ptr390,10522
+    const_local_iterator( node_ptr_type n ):node_ptr(n) {}const_local_iterator392,10551
+    const_local_iterator(const local_iterator_type& rhs ):node_ptr(rhs.node_ptr) {}const_local_iterator394,10611
+    const_local_iterator(const const_local_iterator_type& rhs ): node_ptr(rhs.node_ptr) {}const_local_iterator396,10696
+    reference_type operator*() const { return node_ptr -> value; };operator *398,10788
+    pointer_type operator->() const { return &(operator*());}operator ->399,10856
+    self& operator++()operator ++401,10919
+    self operator++( int )operator ++408,11087
+    bool operator==( const self& rhs ) const { return node_ptr == rhs.node_ptr; }operator ==415,11189
+    bool operator!=( const self& rhs ) const { return node_ptr != rhs.node_ptr; }operator !=416,11271
+static constexpr unsigned long long PRIME_NUM = 99;PRIME_NUM419,11357
+static constexpr size_t prime_list[] = {prime_list421,11435
+inline size_t next_prime( size_t n )next_prime444,13125
+class hashtable{hashtable455,13407
+    using value_traits_type = value_traits<T>;value_traits_type460,13541
+    using key_type          = typename value_traits_type::key_type;key_type461,13588
+    using mapped_type       = typename value_traits_type::mapped_type;mapped_type462,13656
+    using value_type        = typename value_traits_type::value_type;value_type463,13727
+    using hasher            = hashFun;hasher464,13797
+    using key_equal         = keyEqual;key_equal465,13836
+    using node_type     = hashtableNode<T>;node_type468,13878
+    using node_ptr_type = node_type*;node_ptr_type469,13922
+    using bucket_type   = std::vector<node_ptr_type>;bucket_type470,13960
+    using allocator_type      = std::allocator<T>;allocator_type472,14015
+    using data_allocator_type = std::allocator<T>;data_allocator_type473,14066
+    using node_allocator_type = std::allocator<node_type>;node_allocator_type474,14117
+    using pointer_type         = typename allocator_type::pointer;pointer_type476,14177
+    using const_pointer_type   = typename allocator_type::const_pointer;const_pointer_type477,14244
+    using reference_type       = typename allocator_type::reference;reference_type478,14317
+    using const_reference_type = typename allocator_type::const_reference;const_reference_type479,14386
+    using size_type            = typename allocator_type::size_type;size_type480,14461
+    using difference_type      = typename allocator_type::difference_type;difference_type481,14530
+    using iterator             = iterator<T, hashFun, keyEqual>;iterator483,14606
+    using const_iterator       = const_iterator<T, hashFun, keyEqual> ;const_iterator484,14671
+    using local_iterator       = local_iterator<T> ;local_iterator485,14743
+    using const_local_iterator = const_local_iterator<T> ;const_local_iterator486,14796
+    using cv_key_type = typename std::remove_cv<typename T::first_type>::type;cv_key_type489,14857
+    hashtableNode<T>*               node_ptr;node_ptr491,14947
+    std::vector<hashtableNode<T> *> buckets;buckets492,14993
+    size_t                          m_size;m_size493,15038
+    size_t                          m_bucket_size;m_bucket_size494,15082
+    float                           m_load_factor;m_load_factor495,15133
+    hasher                          m_hash;m_hash496,15184
+    keyEqual                        equal;equal497,15228
+    bool is_equal( const cv_key_type& key1, const cv_key_type& key2  )is_equal499,15282
+    bool is_equal( const cv_key_type& key1, const cv_key_type& key2  ) constis_equal504,15402
+    const_iterator M_cit( node_ptr_type node ) const noexceptM_cit509,15528
+    iterator M_begin() noexceptM_begin514,15670
+    const_iterator M_begin() const noexceptM_begin524,15889
+    explicit hashtable( size_t bucket_count,hashtable533,16111
+    hashtable( const hashtable& rhs )hashtable541,16399
+    hashtable( hashtable&& rhs ) noexcepthashtable547,16528
+    hashtable& operator=(const hashtable& rhs )operator =560,16916
+    hashtable& operator=(hashtable&& rhs ) noexceptoperator =570,17105
+    ~hashtable() { clear(); }~hashtable577,17255
+    iterator begin() noexceptbegin579,17286
+    const_iterator begin() const noexceptbegin581,17342
+    iterator end() noexceptend583,17410
+    const_iterator end() const noexceptend585,17480
+    const_iterator cbegin() const noexceptcbegin588,17554
+    const_iterator cend() const noexceptcend590,17621
+    bool empty() const noexcept { return m_size == 0; }empty594,17714
+    size_t size() const noexcept { return m_size; }size595,17770
+    size_t max_size() const noexcept { return static_cast<size_t>(-1); }max_size596,17822
+    iterator emplace_multi( Args&& ...args )emplace_multi600,17944
+    std::pair<iterator, bool> emplace_unique( Args&& ... args )emplace_unique614,18373
+    iterator emplace_multi_use_hint(const_iterator /*hint*/, Args &&...args)emplace_multi_use_hint628,18846
+    iterator emplace_unique_use_hint(const_iterator /*hint*/, Args &&...args)emplace_unique_use_hint634,19022
+    iterator insert_multi_noresize( const value_type& value )insert_multi_noresize639,19177
+    std::pair<iterator, bool> insert_unique_noresize( const value_type& value )insert_unique_noresize658,19845
+    iterator insert_multi( const value_type& value )insert_multi674,20444
+    iterator insert_multi(value_type&& value)insert_multi680,20584
+    std::pair<iterator, bool> insert_unique( const value_type& value )insert_unique685,20691
+    std::pair<iterator, bool> insert_unique( value_type&& value )insert_unique691,20850
+    iterator insert_multi_use_hint(const_iterator /*hint*/,insert_multi_use_hint696,20981
+    iterator insert_multi_use_hint(const_iterator /*hint*/,insert_multi_use_hint701,21147
+    iterator insert_unique_use_hint(const_iterator /*hint*/,insert_unique_use_hint707,21323
+    iterator insert_unique_use_hint(const_iterator /*hint*/,insert_unique_use_hint712,21498
+    void insert_multi( T1 first, T1 last )insert_multi719,21698
+    void insert_unique(T1 first, T1 last)insert_unique726,21890
+    void erase( const_iterator position )erase733,22076
+    void erase( const_iterator first, const_iterator last )erase761,22911
+    size_t erase_multi( const key_type& key )erase_multi786,23856
+    size_t erase_unique( const key_type& key )erase_unique796,24114
+    void clear()clear823,24994
+    void swap( hashtable& rhs ) noexceptswap839,25435
+    size_t count( const key_type& key ) constcount852,25819
+    iterator find( const key_type& key )find865,26167
+    const_iterator find( const key_type& key ) constfind873,26449
+    std::pair<iterator, iterator> equal_range_multi( const key_type& key )equal_range_multi881,26730
+    std::pair<const_iterator, const_iterator> equal_range_multi(const key_type& key) constequal_range_multi902,27645
+    std::pair<iterator, iterator> equal_range_unique( const key_type& key )equal_range_unique923,28550
+    std::pair<const_iterator, const_iterator> equal_range_unique(const key_type& key ) constequal_range_unique942,29322
+    local_iterator begin( size_t n ) noexceptbegin963,30098
+    local_iterator end( size_t n ) noexceptend969,30240
+    const_local_iterator begin( size_t n ) const noexceptbegin975,30378
+    const_local_iterator cbegin( size_t n ) const noexceptcbegin980,30532
+    const_local_iterator end( size_t n ) const noexceptend986,30690
+    const_local_iterator cend( size_t n ) const noexceptcend992,30840
+    size_t bucket_count() const noexceptbucket_count998,30991
+    size_t max_bucket_count() const noexceptmax_bucket_count1002,31074
+    size_t bucket_size( size_t n ) const noexceptbucket_size1007,31174
+    size_t bucket( const key_type& key ) constbucket1016,31371
+    float load_factor() const noexceptload_factor1022,31475
+    float max_load_factor() const noexceptmax_load_factor1027,31614
+    void max_load_factor( float n )max_load_factor1032,31700
+    void rehash( size_t count )rehash1039,31867
+    void reserve(size_t count )reserve1052,32238
+    hasher hash_fcn() consthash_fcn1056,32360
+    key_equal key_eq() constkey_eq1060,32423
+    void init( size_t n )init1066,32498
+    void copy_init( const hashtable& ht )copy_init1082,32848
+    node_ptr_type create_node(Args&& ... args )create_node1111,33807
+    void destroy_node(node_ptr_type node )destroy_node1126,34209
+    size_t next_size( size_t n ) constnext_size1133,34403
+    size_t hash( const key_type& key, size_t n ) consthash1138,34485
+    size_t hash( const key_type& key ) consthash1143,34585
+    void rehash_if_need(size_t n )rehash_if_need1148,34687
+    void copy_insert_multi( T1 first, T1 last )copy_insert_multi1158,34960
+    void copy_insert_unique(T1 first, T1 last )copy_insert_unique1176,35491
+    std::pair<iterator, bool> insert_node_unique(node_ptr_type np )insert_node_unique1192,35951
+    void replace_bucket(size_t bucket_count )replace_bucket1213,36660
+    void erase_bucket(size_t n, node_ptr_type first, node_ptr_type last )erase_bucket1242,37869
+    void erase_bucket(size_t n, node_ptr_type last)erase_bucket1260,38396
+    bool equal_to_multi( const hashtable& other )equal_to_multi1272,38678
+    bool equal_to_unique(const hashtable& other)equal_to_unique1287,39261
+void swap( hashtable<T, hashFun, keyEqual> & lhs,swap1302,39679
+
+american-english,0
+
+HashTable.cc,1268
+class hashd{hashd12,179
+class hashd<string> {hashd20,379
+    size_t operator()( const string & key )operator ()22,411
+class Employee {Employee33,595
+    const string & get_name() constget_name35,622
+    bool operator==( const Employee & rhs )operator ==40,692
+    bool operator!=( const Employee & rhs )operator !=45,798
+    string name;name50,899
+class hashd<Employee>hashd54,932
+    size_t operator()( const Employee & item )operator ()57,966
+class HashTable{HashTable68,1149
+    explicit HashTable( int size =  101 ):theLists(size){}HashTable70,1176
+    size_t size() constsize72,1236
+    bool contains( const HashedObj & x ) constcontains78,1344
+    void makeEmpty()makeEmpty84,1538
+    bool insert( InsertObj && x )insert91,1677
+        using U1 = typename std::remove_reference<InsertObj>::type;U194,1762
+    bool remove( const HashedObj & x )remove110,2324
+    vector<list<HashedObj>> theLists;theLists125,2649
+    int currentSize;currentSize126,2687
+    void rehash()rehash128,2709
+    size_t myhash( const HashedObj & x ) constmyhash142,3076
+    int nextPrime( int n )nextPrime148,3213
+    bool isPrime( int n )isPrime159,3368
+int main()main176,3656
+void swap(HashTable<T, Hash, KeyEqual>& lhs,swap198,4115
+
+CukooHashTable.cc,2054
+int universalHash1( int x, int A, int B, int P, int M )universalHash17,106
+int universalHash( int x, int A, int B, int M )universalHash12,251
+class HashFamily{HashFamily26,630
+class StringHashFamily {StringHashFamily34,801
+    StringHashFamily() : MULTIPLIERS( count )StringHashFamily36,836
+    int getNumberOfFunctions() constgetNumberOfFunctions41,927
+    void generateNewFunctions()generateNewFunctions46,999
+    size_t hash( const string & x, int which ) consthash52,1117
+    vector<int> MULTIPLIERS;MULTIPLIERS64,1378
+    UniformRandom r;r65,1407
+class CukooHashTable{CukooHashTable69,1474
+    explicit CukooHashTable( int size = 101 )CukooHashTable71,1506
+    void makeEmpty()makeEmpty79,1713
+    bool contains( const AnyType & x ) constcontains86,1840
+    bool remove( const AnyType & x )remove91,1933
+    bool insert( const AnyType & x )insert103,2178
+    struct HashEntry{HashEntry117,2437
+        AnyType element;element118,2459
+        bool isActive;isActive119,2484
+        HashEntry( const AnyType & e = AnyType{}, bool a = false )HashEntry121,2508
+        HashEntry( AnyType&& e, bool a = false )HashEntry124,2625
+    bool insertHelper1( AnyType && xx )insertHelper1130,2790
+    bool isActive( int currentPos ) constisActive168,3848
+    size_t myhash( const AnyType & x, int which ) constmyhash173,3956
+    int findPos( const AnyType & x ) constfindPos178,4087
+    void expand()expand190,4357
+    void rehash()rehash195,4450
+    void rehash( int newSize )rehash201,4559
+    int nextPrime( int n )nextPrime219,4944
+    bool isPrime( int n )isPrime230,5099
+    static constexpr double MAX_LOAD       = 0.40;MAX_LOAD245,5383
+    static constexpr int    ALLOW_REHASHES = 5;ALLOW_REHASHES246,5434
+    vector<HashEntry> array;array248,5483
+    int currentSize;currentSize249,5512
+    int numHashFunctions;numHashFunctions250,5533
+    int rehashes;rehashes251,5559
+    UniformRandom r;r252,5577
+    HashFamily hashFunctions;hashFunctions253,5598
+int main()main256,5632
+
+CMakeLists.txt,346
+project(HashTable)HashTable2,37
+set(CMAKE_CXX_COMPILER clang++)CMAKE_CXX_COMPILER4,57
+set(EXECUTABLE_OUTPUT_PATH ${EXEC_DIR}/HashTable)EXECUTABLE_OUTPUT_PATH8,129
+add_executable( CukooHashTable          CukooHashTable.cc          )CukooHashTable11,204
+add_executable( HashTable               HashTable.cc               )HashTable13,343
+
+OpenAddressingHashtable.cc,1520
+class hashd{hashd10,162
+class hashd<int>{hashd16,246
+    size_t operator() ( const int & k ) constoperator () 18,274
+class hashd<string> {hashd26,376
+    size_t operator()( const string & key )operator ()27,398
+class HashTable {HashTable42,694
+    explicit HashTable( int size = 101 )HashTable44,722
+    bool contains( const HashObj & x ) constcontains47,822
+    void makeEmpty()makeEmpty50,909
+    bool insert( const HashObj & x )insert57,1036
+    bool insert( HashObj && x )insert73,1353
+    bool remove( const HashObj & x )remove89,1704
+    enum EntryType { ACTIVE, EMPTY, DELETED };EntryType101,1926
+    enum EntryType { ACTIVE, EMPTY, DELETED };ACTIVE101,1926
+    enum EntryType { ACTIVE, EMPTY, DELETED };EMPTY101,1926
+    enum EntryType { ACTIVE, EMPTY, DELETED };DELETED101,1926
+    struct HashEntry{HashEntry104,1985
+        HashObj element;element105,2007
+        EntryType info;info106,2032
+        HashEntry( const HashObj & e = HashObj{}, EntryType i = EMPTY )HashEntry108,2057
+        HashEntry( HashObj && e, EntryType i = EMPTY )HashEntry110,2175
+    vector<HashEntry> array;array115,2298
+    int currentSize;currentSize116,2327
+    bool isActive( int currentPos ) constisActive118,2349
+    int findPos( const HashObj & x ) constfindPos122,2456
+    void rehash()rehash137,2850
+    size_t myhash( const HashObj & x ) constmyhash151,3210
+    int nextPrime( int n )nextPrime158,3341
+    bool isPrime( int n )isPrime169,3496
+int main()main185,3783
+
+hashtable.cpp,17867
+struct m_integral_constantm_integral_constant13,289
+  static constexpr T value = v;value15,318
+using m_bool_constant = m_integral_constant<bool, b>;m_bool_constant19,372
+typedef m_bool_constant<true>  m_true_type;m_true_type21,427
+typedef m_bool_constant<false> m_false_type;m_false_type22,471
+struct is_pair final : m_false_type {};is_pair25,535
+struct is_pair<std::pair<T1, T2>> final : m_true_type{} ;is_pair28,604
+struct value_traits_imp {value_traits_imp54,1132
+    using key_type    = T;key_type55,1158
+    using mapped_type = T;mapped_type56,1185
+    using value_type  = T;value_type57,1212
+    static const key_type& get_key( const T1& value )get_key60,1263
+    static const key_type& get_value( const T1& value )get_value66,1375
+struct value_traits_imp<T, true>{value_traits_imp73,1488
+    using key_type    = typename std::remove_cv<typename T::first_type>::type;key_type75,1551
+    using mapped_type = typename T::second_type;mapped_type76,1630
+    using value_type  = T;value_type77,1679
+    static const key_type& get_key( const T1& value)get_key80,1730
+    static const value_type& get_value( const T1& value )get_value86,1847
+struct value_traits{value_traits94,1963
+    static constexpr bool is_map = is_pair<T>::value;is_map95,1984
+    using value_traits_type = value_traits_imp<T, is_map>;value_traits_type97,2039
+    using key_type    = typename value_traits_type::key_type;key_type99,2099
+    using mapped_type = typename value_traits_type::mapped_type;mapped_type100,2161
+    using value_type  = typename value_traits_type::value_type;value_type101,2226
+    static const key_type& get_key(const T1& value)get_key104,2314
+    static const key_type& get_value(const T1& value)get_value110,2452
+struct hashtableNode{hashtableNode120,2620
+    T              value;value121,2642
+    hashtableNode* next;next122,2668
+    hashtableNode( const T& n ) : value(n), next(nullptr){}hashtableNode125,2725
+    hashtableNode( const hashtableNode& node ) : value( node.value), next(node.next){}hashtableNode127,2786
+    hashtableNode( hashtableNode&& node ) : value( std::move(node.value)), next(node.next)hashtableNode128,2873
+struct iterator_base{iterator_base137,3072
+    using hashtable_type         = hashtable<T, hashFun, keyEqual>;hashtable_type138,3094
+    using base                   = iterator_base<T, hashFun, keyEqual>;base139,3162
+    using node_ptr_type          = hashtableNode<T>*;node_ptr_type140,3234
+    using contain_ptr_type       = hashtable_type*;contain_ptr_type141,3288
+    using const_node_ptr_type    = const node_ptr_type;const_node_ptr_type142,3340
+    using const_contain_ptr_type = const contain_ptr_type;const_contain_ptr_type143,3396
+    using iterator_type          = iterator<T, hashFun, keyEqual>;iterator_type144,3455
+    using const_iterator_type    = const_iterator<T, hashFun, keyEqual>;const_iterator_type145,3522
+    node_ptr_type    node_ptr;  //迭代器指向的节点node_ptr147,3596
+    contain_ptr_type hashtable_ptr; //保持与容器的连接hashtable_ptr148,3655
+    bool operator==(const base& rhs)operator ==152,3751
+    bool operator!=(const base& rhs)operator !=155,3830
+struct iterator : public iterator_base<T, hashFun, keyEqual>{iterator160,3961
+    using base                = iterator_base<T, hashFun, keyEqual>;base161,4023
+    using hashtable_type      = typename base::hashtable_type;hashtable_type162,4092
+    using iterator_type       = typename base::iterator_type;iterator_type163,4155
+    using const_iterator_type = typename base::const_iterator_type;const_iterator_type164,4217
+    using node_ptr_type       = typename base::node_ptr_type;node_ptr_type165,4285
+    using contain_ptr_type    = typename base::contain_ptr_type;contain_ptr_type166,4347
+    using value_traits_type = value_traits<T>;value_traits_type168,4413
+    using value_type        = T;value_type169,4460
+    using value_ptr_type    = value_type*;value_ptr_type170,4493
+    using value_reference   = value_type&;value_reference171,4536
+    iterator( node_ptr_type n, contain_ptr_type t )iterator178,4665
+    iterator( const iterator& rhs )iterator184,4779
+    iterator( const const_iterator_type& rhs )iterator191,4905
+    iterator& operator=( const iterator& rhs )operator =198,5042
+    iterator& operator=( const const_iterator_type& rhs )operator =208,5255
+    value_reference operator*() const { return node_ptr -> value; }operator *219,5480
+    value_ptr_type operator->() const  { return &(operator*());}operator ->221,5549
+    iterator& operator++()operator ++224,5656
+    iterator operator++(int)operator ++239,6212
+struct const_iterator : public iterator_base<T, hashFun, keyEqual> {const_iterator248,6374
+    using base                = iterator_base<T, hashFun, keyEqual>;base249,6443
+    using hashtable_type      = typename base::hashtable_type;hashtable_type250,6512
+    using iterator_type       = typename base::iterator_type;iterator_type251,6575
+    using const_iterator_type = typename base::const_iterator_type;const_iterator_type252,6637
+    using node_ptr_type       = typename base::const_node_ptr_type;node_ptr_type253,6705
+    using contain_ptr_type    = typename base::const_contain_ptr_type;contain_ptr_type254,6773
+    using value_traits_type = value_traits<T>;value_traits_type256,6845
+    using value_type        = T;value_type257,6892
+    using value_ptr_type    = const value_type*;value_ptr_type258,6925
+    using value_reference   = const value_type&;value_reference259,6974
+    const_iterator( node_ptr_type n, contain_ptr_type t )const_iterator265,7114
+    const_iterator( const iterator_type& rhs )const_iterator272,7240
+    const_iterator( const const_iterator_type & rhs )const_iterator278,7381
+    const_iterator& operator=( const iterator_type& rhs )operator =284,7529
+    const_iterator_type operator=( const const_iterator_type & rhs )operator =294,7758
+    value_reference operator*() const { return node_ptr -> value;}operator *304,7998
+    value_ptr_type operator->() const { return &(operator*()); }operator ->305,8065
+    const_iterator_type& operator++()operator ++307,8131
+    const_iterator_type operator++( int )operator ++324,8631
+struct local_iterator {local_iterator333,8786
+    using value_type      = T;value_type334,8810
+    using pointer_type    = T*;pointer_type335,8841
+    using reference_type  = T&;reference_type336,8873
+    using difference_type = std::ptrdiff_t;difference_type337,8905
+    using node_ptr_type   = hashtableNode<T>*;node_ptr_type338,8949
+    using self                      = local_iterator<T>;self340,8997
+    using local_iterator_type       = local_iterator<T>;local_iterator_type341,9054
+    using const_local_iterator_type = const_local_iterator<T>;const_local_iterator_type342,9111
+    node_ptr_type node_ptr;node_ptr344,9175
+    local_iterator( node_ptr_type n ):node_ptr(n) {}local_iterator346,9204
+    local_iterator(const local_iterator_type& rhs ):node_ptr(rhs.node_ptr) {}local_iterator348,9258
+    local_iterator(const const_local_iterator_type& rhs ): node_ptr(rhs.node_ptr) {}local_iterator350,9337
+    reference_type operator*() const { return node_ptr -> value; };operator *352,9423
+    pointer_type operator->() const { return &(operator*());}operator ->353,9491
+    self& operator++()operator ++355,9554
+    self operator++( int )operator ++362,9722
+    bool operator==( const self& rhs ) const { return node_ptr == rhs.node_ptr; }operator ==369,9824
+    bool operator!=( const self& rhs ) const { return node_ptr != rhs.node_ptr; }operator !=370,9906
+struct const_local_iterator {const_local_iterator374,10011
+    using value_type      = T;value_type375,10041
+    using pointer_type    = const T*;pointer_type376,10072
+    using reference_type  = const T&;reference_type377,10110
+    using difference_type = std::ptrdiff_t;difference_type378,10148
+    using node_ptr_type   = const hashtableNode<T>*;node_ptr_type379,10192
+    using self                      = const_local_iterator<T>;self381,10246
+    using local_iterator_type       = local_iterator<T>;local_iterator_type382,10309
+    using const_local_iterator_type = const_local_iterator<T>;const_local_iterator_type383,10366
+    node_ptr_type node_ptr;node_ptr385,10430
+    const_local_iterator( node_ptr_type n ):node_ptr(n) {}const_local_iterator387,10459
+    const_local_iterator(const local_iterator_type& rhs ):node_ptr(rhs.node_ptr) {}const_local_iterator389,10519
+    const_local_iterator(const const_local_iterator_type& rhs ): node_ptr(rhs.node_ptr) {}const_local_iterator391,10604
+    reference_type operator*() const { return node_ptr -> value; };operator *393,10696
+    pointer_type operator->() const { return &(operator*());}operator ->394,10764
+    self& operator++()operator ++396,10827
+    self operator++( int )operator ++403,10995
+    bool operator==( const self& rhs ) const { return node_ptr == rhs.node_ptr; }operator ==410,11097
+    bool operator!=( const self& rhs ) const { return node_ptr != rhs.node_ptr; }operator !=411,11179
+static constexpr unsigned long long PRIME_NUM = 99;PRIME_NUM414,11265
+static constexpr size_t prime_list[] = {prime_list416,11343
+inline size_t next_prime( size_t n )next_prime439,13033
+class hashtable{hashtable450,13315
+    using value_traits_type = value_traits<T>;value_traits_type454,13439
+    using key_type          = typename value_traits_type::key_type;key_type455,13486
+    using mapped_type       = typename value_traits_type::mapped_type;mapped_type456,13554
+    using value_type        = typename value_traits_type::value_type;value_type457,13625
+    using hasher            = hashFun;hasher458,13695
+    using key_equal         = keyEqual;key_equal459,13734
+    using node_type     = hashtableNode<T>;node_type462,13776
+    using node_ptr_type = node_type*;node_ptr_type463,13820
+    using bucket_type   = std::vector<node_ptr_type>;bucket_type464,13858
+    using allocator_type      = std::allocator<T>;allocator_type466,13913
+    using data_allocator_type = std::allocator<T>;data_allocator_type467,13964
+    using node_allocator_type = std::allocator<node_type>;node_allocator_type468,14015
+    using pointer_type         = typename allocator_type::pointer;pointer_type470,14075
+    using const_pointer_type   = typename allocator_type::const_pointer;const_pointer_type471,14142
+    using reference_type       = typename allocator_type::reference;reference_type472,14215
+    using const_reference_type = typename allocator_type::const_reference;const_reference_type473,14284
+    using size_type            = typename allocator_type::size_type;size_type474,14359
+    using difference_type      = typename allocator_type::difference_type;difference_type475,14428
+    using iterator             = iterator<T, hashFun, keyEqual>;iterator477,14504
+    using const_iterator       = const_iterator<T, hashFun, keyEqual> ;const_iterator478,14569
+    using local_iterator       = local_iterator<T> ;local_iterator479,14641
+    using const_local_iterator = const_local_iterator<T> ;const_local_iterator480,14694
+    using cv_key_type = typename std::remove_cv<typename T::first_type>::type;cv_key_type483,14755
+    hashtableNode<T>*               node_ptr;node_ptr485,14845
+    std::vector<hashtableNode<T> *> buckets;buckets486,14891
+    size_t                          m_size;m_size487,14936
+    size_t                          m_bucket_size;m_bucket_size488,14980
+    float                           m_load_factor;m_load_factor489,15031
+    hasher                          m_hash;m_hash490,15082
+    keyEqual                        equal;equal491,15126
+    bool is_equal( const cv_key_type& key1, const cv_key_type& key2  )is_equal493,15180
+    bool is_equal( const cv_key_type& key1, const cv_key_type& key2  ) constis_equal498,15300
+    const_iterator M_cit( node_ptr_type node ) const noexceptM_cit503,15426
+    iterator M_begin() noexceptM_begin508,15568
+    const_iterator M_begin() const noexceptM_begin518,15787
+    explicit hashtable( size_t bucket_count,hashtable527,16009
+    hashtable( const hashtable& rhs )hashtable535,16297
+    hashtable( hashtable&& rhs ) noexcepthashtable541,16426
+    hashtable& operator=(const hashtable& rhs )operator =554,16814
+    hashtable& operator=(hashtable&& rhs ) noexceptoperator =564,17003
+    ~hashtable() { clear(); }~hashtable571,17153
+    iterator begin() noexceptbegin573,17184
+    const_iterator begin() const noexceptbegin575,17240
+    iterator end() noexceptend577,17308
+    const_iterator end() const noexceptend579,17378
+    const_iterator cbegin() const noexceptcbegin582,17452
+    const_iterator cend() const noexceptcend584,17519
+    bool empty() const noexcept { return m_size == 0; }empty588,17612
+    size_t size() const noexcept { return m_size; }size589,17668
+    size_t max_size() const noexcept { return static_cast<size_t>(-1); }max_size590,17720
+    iterator emplace_multi( Args&& ...args )emplace_multi594,17842
+    std::pair<iterator, bool> emplace_unique( Args&& ... args )emplace_unique608,18271
+    iterator emplace_multi_use_hint(const_iterator /*hint*/, Args &&...args)emplace_multi_use_hint622,18744
+    iterator emplace_unique_use_hint(const_iterator /*hint*/, Args &&...args)emplace_unique_use_hint628,18920
+    iterator insert_multi_noresize( const value_type& value )insert_multi_noresize633,19075
+    std::pair<iterator, bool> insert_unique_noresize( const value_type& value )insert_unique_noresize652,19743
+    iterator insert_multi( const value_type& value )insert_multi668,20342
+    iterator insert_multi(value_type&& value)insert_multi674,20482
+    std::pair<iterator, bool> insert_unique( const value_type& value )insert_unique679,20589
+    std::pair<iterator, bool> insert_unique( value_type&& value )insert_unique685,20748
+    iterator insert_multi_use_hint(const_iterator /*hint*/,insert_multi_use_hint690,20879
+    iterator insert_multi_use_hint(const_iterator /*hint*/,insert_multi_use_hint695,21045
+    iterator insert_unique_use_hint(const_iterator /*hint*/,insert_unique_use_hint701,21221
+    iterator insert_unique_use_hint(const_iterator /*hint*/,insert_unique_use_hint706,21396
+    void insert_multi( T1 first, T1 last )insert_multi713,21596
+    void insert_unique(T1 first, T1 last)insert_unique720,21788
+    void erase( const_iterator position )erase727,21974
+    void erase( const_iterator first, const_iterator last )erase755,22809
+    size_t erase_multi( const key_type& key )erase_multi780,23754
+    size_t erase_unique( const key_type& key )erase_unique790,24012
+    void clear()clear817,24892
+    void swap( hashtable& rhs ) noexceptswap833,25333
+    size_t count( const key_type& key ) constcount846,25717
+    iterator find( const key_type& key )find859,26065
+    const_iterator find( const key_type& key ) constfind867,26347
+    std::pair<iterator, iterator> equal_range_multi( const key_type& key )equal_range_multi875,26628
+    std::pair<const_iterator, const_iterator> equal_range_multi(const key_type& key) constequal_range_multi896,27543
+    std::pair<iterator, iterator> equal_range_unique( const key_type& key )equal_range_unique917,28448
+    std::pair<const_iterator, const_iterator> equal_range_unique(const key_type& key ) constequal_range_unique936,29220
+    local_iterator begin( size_t n ) noexceptbegin957,29996
+    local_iterator end( size_t n ) noexceptend963,30138
+    const_local_iterator begin( size_t n ) const noexceptbegin969,30276
+    const_local_iterator cbegin( size_t n ) const noexceptcbegin974,30430
+    const_local_iterator end( size_t n ) const noexceptend980,30588
+    const_local_iterator cend( size_t n ) const noexceptcend986,30738
+    size_t bucket_count() const noexceptbucket_count992,30889
+    size_t max_bucket_count() const noexceptmax_bucket_count996,30972
+    size_t bucket_size( size_t n ) const noexceptbucket_size1001,31072
+    size_t bucket( const key_type& key ) constbucket1010,31269
+    float load_factor() const noexceptload_factor1016,31373
+    float max_load_factor() const noexceptmax_load_factor1021,31512
+    void max_load_factor( float n )max_load_factor1026,31598
+    void rehash( size_t count )rehash1033,31765
+    void reserve(size_t count )reserve1046,32136
+    hasher hash_fcn() consthash_fcn1050,32258
+    key_equal key_eq() constkey_eq1054,32321
+    void init( size_t n )init1060,32396
+    void copy_init( const hashtable& ht )copy_init1076,32746
+    node_ptr_type create_node(Args&& ... args )create_node1105,33705
+    void destroy_node(node_ptr_type node )destroy_node1120,34107
+    size_t next_size( size_t n ) constnext_size1127,34301
+    size_t hash( const key_type& key, size_t n ) consthash1132,34383
+    size_t hash( const key_type& key ) consthash1137,34483
+    void rehash_if_need(size_t n )rehash_if_need1142,34585
+    void copy_insert_multi( T1 first, T1 last )copy_insert_multi1152,34858
+    void copy_insert_unique(T1 first, T1 last )copy_insert_unique1170,35389
+    std::pair<iterator, bool> insert_node_unique(node_ptr_type np )insert_node_unique1186,35849
+    void replace_bucket(size_t bucket_count )replace_bucket1207,36558
+    void erase_bucket(size_t n, node_ptr_type first, node_ptr_type last )erase_bucket1236,37767
+    void erase_bucket(size_t n, node_ptr_type last)erase_bucket1254,38294
+    bool equal_to_multi( const hashtable& other )equal_to_multi1266,38576
+    bool equal_to_unique(const hashtable& other)equal_to_unique1281,39159
+void swap( hashtable<T, hashFun, keyEqual> & lhs,swap1296,39577
+int main()main1302,39710
+
+unordered_map.h,4567
+#define MYTINYSTL_UNORDERED_MAP_H_MYTINYSTL_UNORDERED_MAP_H_2,35
+class unordered_map{unordered_map11,262
+    using base_type = hashtable<std::pair<const Key, T>, Hash, keyEqual>;base_type13,294
+    base_type m_ht;m_ht14,368
+    using allocator_type = typename base_type::allocator_type;allocator_type16,398
+    using key_type       = typename base_type::key_type;key_type17,461
+    using mapped_type    = typename base_type::mapped_type;mapped_type18,518
+    using value_type     = typename base_type::value_type;value_type19,578
+    using hasher         = typename base_type::hasher;hasher20,637
+    using key_equal      = typename base_type::key_equal;key_equal21,692
+    using difference_type      = typename base_type::difference_type;difference_type23,751
+    using pointer_type         = typename base_type::pointer_type;pointer_type24,821
+    using const_pointer_type   = typename base_type::const_pointer_type;const_pointer_type25,888
+    using reference_type       = typename base_type::reference_type;reference_type26,961
+    using const_reference_type = typename base_type::const_reference_type;const_reference_type27,1030
+    using iterator             = typename base_type::iterator;iterator29,1106
+    using const_iterator       = typename base_type::const_iterator;const_iterator30,1169
+    using local_iterator       = typename base_type::local_iterator;local_iterator31,1238
+    using const_local_iterator = typename base_type::const_local_iterator;const_local_iterator32,1307
+    allocator_type get_allocator() constget_allocator34,1383
+    unordered_map()unordered_map40,1484
+    explicit unordered_map(size_t bucket_count,unordered_map45,1560
+    unordered_map(T1 first, T2 last,unordered_map51,1790
+    unordered_map( std::initializer_list<value_type> ilist,unordered_map62,2183
+    unordered_map( const unordered_map& rhs)unordered_map73,2634
+    unordered_map(unordered_map&& rhs) noexceptunordered_map76,2710
+    unordered_map& operator=(const unordered_map& rhs)operator =79,2801
+    unordered_map& operator=(unordered_map&& rhs)operator =85,2916
+    unordered_map& operator=(std::initializer_list<value_type> ilist)operator =91,3037
+    iterator begin() noexceptbegin102,3368
+    iterator end() noexceptend107,3440
+    const_iterator begin() const noexceptbegin112,3508
+    const_iterator end() const noexceptend116,3591
+    const_iterator cbegin() const noexceptcbegin121,3671
+    const_iterator cend() const noexceptcend125,3756
+    bool empty() const noexceptempty130,3838
+    size_t size() const noexceptsize135,3912
+    size_t max_size() const noexceptmax_size140,3986
+    std::pair<iterator, bool> emplace(Args&& ...args)emplace146,4096
+    iterator emplace_hint(const_iterator hint, Args&& ...args)emplace_hint152,4256
+    pair<iterator, bool> insert(const value_type& value)insert157,4412
+    pair<iterator, bool> insert(value_type&& value)insert162,4524
+    iterator insert( const_iterator hint, const value_type& value)insert168,4644
+    iterator insert( const_iterator hint, value_type&& value)insert172,4780
+    void insert(T1 first, T1 last)insert178,4947
+    void erase(iterator it)erase183,5036
+    void erase(iterator first, iterator last)erase188,5101
+    size_t erase( const key_type& key)erase193,5193
+    void clear()clear198,5284
+    void swap(unordered_map& other) noexceptswap203,5336
+    mapped_type& at( const key_type& key)at208,5425
+    const mapped_type& at( const key_type& key ) constat215,5638
+    {__anona20283200102223,5911
+    mapped_type& operator[](key_type&& key)operator []229,6077
+    size_t count( const key_type& key ) constcount237,6294
+    iterator find(const key_type& key)find242,6383
+    const_iterator find( const key_tyep& key ) constfind247,6466
+    std::pair<iterator, iterator> equal_range( const key_type& key)equal_range252,6563
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& key) constequal_range257,6689
+    local_iterator begin( size_t n ) noexceptbegin262,6832
+    const_local_iterator begin(size_t n ) const noexceptbegin266,6920
+    const_local_iterator cbegin(size_t n ) const noexceptcbegin270,7019
+    local_iterator end(size_t n ) noexceptend275,7121
+    const_local_iterator end( size_t n ) const noexceptend279,7204
+    const_local_iterator cend( size_t n ) const noexceptcend283,7300
+    size_t bucket_count() const noexceptbucket_count288,7399
+    size_t max_bucket_count() const noexceptmax_bucket_count292,7488
+
+UniformRandom.h,1191
+#define UNIFORM_RANDOMUNIFORM_RANDOM2,23
+class Random48Random4832,953
+    static long long currentTimeMicroSeconds( )currentTimeMicroSeconds35,981
+    Random48( long long initialValue = currentTimeMicroSeconds( ) )Random4845,1301
+    int nextInt( )nextInt55,1508
+    int nextInt( int high )nextInt64,1674
+    double nextDouble( )nextDouble73,1892
+    int nextInt( int low, int high )nextInt83,2172
+    long long nextLong( )nextLong92,2391
+    long long state;state98,2525
+    static const long long A = 25214903917LL;A100,2553
+    static const long long C = 11;C101,2599
+    static const long long M = ( 1LL << 48 );M102,2634
+    static const long long MASK = M - 1;MASK103,2680
+    int next( int bits )next108,2784
+static int currentTimeSeconds( )currentTimeSeconds130,3493
+class UniformRandomUniformRandom139,3761
+    UniformRandom( int seed = currentTimeSeconds( ) ) : generator{ static_cast<mt19937>(seed )}UniformRandom143,3794
+    int nextInt( )nextInt150,3959
+    int nextInt( int high )nextInt159,4170
+    double nextDouble( )nextDouble167,4328
+    int nextInt( int low, int high )nextInt176,4548
+    mt19937 generator;generator183,4720
+
+a.out,0

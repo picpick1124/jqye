@@ -1,0 +1,104 @@
+
+american-english,0
+
+HashTable.cc,1172
+class hashd{hashd12,179
+class hashd<string> {hashd20,379
+    size_t operator()( const string & key )operator ()22,411
+class Employee {Employee33,595
+    const string & get_name() constget_name35,622
+    bool operator==( const Employee & rhs )operator ==40,692
+    bool operator!=( const Employee & rhs )operator !=45,798
+    string name;name50,899
+class hashd<Employee>hashd54,932
+    size_t operator()( const Employee & item )operator ()57,966
+class HashTable{HashTable66,1127
+    explicit HashTable( int size =  101 ):theLists(size){}HashTable68,1154
+    bool contains( const HashedObj & x ) constcontains70,1214
+    void makeEmpty()makeEmpty76,1408
+    bool insert( InsertObj && x )insert83,1547
+        using U1 = typename std::remove_reference<InsertObj>::type;U186,1632
+    bool remove( const HashedObj & x )remove102,2194
+    vector<list<HashedObj>> theLists;theLists117,2519
+    int currentSize;currentSize118,2557
+    void rehash()rehash120,2579
+    size_t myhash( const HashedObj & x ) constmyhash134,2946
+    int nextPrime( int n )nextPrime140,3083
+    bool isPrime( int n )isPrime151,3238
+int main()main168,3526
+
+CukooHashTable.cc,1947
+int universalHash1( int x, int A, int B, int P, int M )universalHash16,79
+int universalHash( int x, int A, int B, int M )universalHash11,224
+class HashFamily{HashFamily25,603
+class StringHashFamily {StringHashFamily33,774
+    StringHashFamily() : MULTIPLIERS( count )StringHashFamily35,809
+    int getNumberOfFunctions() constgetNumberOfFunctions40,900
+    void generateNewFunctions()generateNewFunctions45,972
+    size_t hash( const string & x, int which ) consthash51,1090
+    vector<int> MULTIPLIERS;MULTIPLIERS63,1351
+    UniformRandom r;r64,1380
+class CukooHashTable{CukooHashTable68,1447
+    explicit CukooHashTable( int size = 101 )CukooHashTable70,1479
+    void makeEmpty()makeEmpty78,1684
+    bool contains( const AnyType & x ) constcontains85,1811
+    bool remove( const AnyType & x )remove90,1904
+    bool insert( const AnyType & x )insert102,2149
+    struct HashEntry{HashEntry116,2408
+        AnyType element;element117,2430
+        bool isActive;isActive118,2455
+        HashEntry( const AnyType & e = AnyType{}, bool a = false )HashEntry120,2479
+        HashEntry( AnyType&& e, bool a = false )HashEntry123,2596
+    bool insertHelper1( AnyType && xx )insertHelper1129,2761
+    bool isActive( int currentPos ) constisActive167,3820
+    size_t myhash( const AnyType & x, int which ) constmyhash172,3928
+    int findPos( const AnyType & x ) constfindPos177,4059
+    void expand()expand189,4329
+    void rehash()rehash194,4422
+    void rehash( int newSize )rehash200,4531
+    static const double MAX_LOAD = 0.40;MAX_LOAD217,4915
+    static const int ALLOW_REHASHES = 5;ALLOW_REHASHES218,4956
+    vector<HashEntry> array;array220,4998
+    int currentSize;currentSize221,5027
+    int numHashFunctions;numHashFunctions222,5048
+    int rehashes;rehashes223,5074
+    UniformRandom r;r224,5092
+    HashFamily hashFunctions;hashFunctions225,5113
+int main()main228,5147
+
+CMakeLists.txt,112
+project(HashTable)HashTable2,37
+set(EXECUTABLE_OUTPUT_PATH ${EXEC_DIR}/HashTable)EXECUTABLE_OUTPUT_PATH4,57
+
+a.cc,25
+int main() {main46,650
+
+OpenAddressingHashtable.cc,1322
+class hashd{hashd7,99
+class hashd<string> {hashd13,183
+    size_t operator()( const string & key )operator ()14,205
+class HashTable {HashTable27,499
+    explicit HashTable( int size = 101 )HashTable29,527
+    bool contains( const HashObj & x ) constcontains32,627
+    void makeEmpty()makeEmpty35,714
+    bool insert( const HashObj & x )insert42,841
+    bool insert( HashObj && x )insert58,1158
+    bool remove( const HashObj & x )remove74,1509
+    enum EntryType { ACTIVE, EMPTY, DELETED };EntryType86,1731
+    enum EntryType { ACTIVE, EMPTY, DELETED };ACTIVE86,1731
+    enum EntryType { ACTIVE, EMPTY, DELETED };EMPTY86,1731
+    enum EntryType { ACTIVE, EMPTY, DELETED };DELETED86,1731
+    struct HashEntry{HashEntry89,1790
+        HashObj element;element90,1812
+        EntryType info;info91,1837
+        HashEntry( const HashObj & e = HashObj{}, EntryType i = EMPTY )HashEntry93,1862
+        HashEntry( HashObj && e, EntryType i = EMPTY )HashEntry95,1980
+    vector<HashEntry> array;array100,2103
+    int currentSize;currentSize101,2132
+    bool isActive( int currentPos ) constisActive103,2154
+    int findPos( const HashObj & x ) constfindPos107,2261
+    void rehash()rehash122,2655
+    size_t myhash( const HashObj & x ) constmyhash136,3015
+int main()main143,3148
+
+a.out,0

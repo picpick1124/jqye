@@ -7,24 +7,22 @@
 
 int main()
 {
+    std::mutex mtx;
     ThreadPool pool(12);
 
 #ifdef FUNCTION_TEST
-    std::cout << "\n\n === The test for function === \n\n";
     function_test( pool );
 #endif
 #ifdef CLASS_TEST
-    std::cout << "\n\n=== The test for class === \n\n";
 	class_test( pool );
 #endif
 #ifdef LAMBDA_TEST
-    std::cout << "\n\n === The test for lambda === \n\n";
     lambda_test( pool );
 #endif
 
-	std::this_thread::sleep_for(std::chrono::seconds(5));
-
+    mtx.lock();
     std::cout << "\n\n ===the test in main=== \n\n";
+    mtx.unlock();
 
     int result;
     for (int i = 1; i <= 3; ++i)

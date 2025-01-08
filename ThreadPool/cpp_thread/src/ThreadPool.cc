@@ -32,12 +32,15 @@ void ThreadPool::shutdown()
 
     m_tasks.stop();
 
-    for( auto& threads : m_workers){
+    for( std::thread* threads : m_workers){
         if( threads != nullptr && threads -> joinable()){
             threads -> join();
+        }
+    }
+
+    for( std::thread* threads : m_workers){
             delete threads;
             threads = nullptr;
-        }
     }
 
     std::cout << "Shutdown the ThreadPool ...\n";

@@ -23,7 +23,6 @@ inline std::size_t unaligned_load(const char* p, int len)
 }
 
 // murmurhash 函数, 用于double, float, string, char*
-// 按位哈希
 size_t __hash_bit(const void* ptr, size_t len)
 {
     const size_t m = 0x5bd1e995;
@@ -212,7 +211,7 @@ template<>
 struct hash<const char*> {
     size_t operator()( const char* Key )
     {
-        return __hash_bit(Key, 16);
+        return __hash_bit(Key, strlen(Key));
     }
 };
 
@@ -220,7 +219,7 @@ template<>
 struct hash<char*> {
     size_t operator()( const char* Key )
     {
-        return __hash_bit(Key, 16);
+        return __hash_bit(Key, strlen(Key));
     }
 
 };
@@ -243,10 +242,10 @@ using true_type  = bool_constant<true>;
 using false_type = bool_constant<false>;
 
 template<class Object>
-struct is_pair_u final : false_type {};
+struct is_pair final : false_type {};
 
 template<class Object1,class Object2>
-struct is_pair_u<std::pair<Object1, Object2>> final : true_type{} ;
+struct is_pair<std::pair<Object1, Object2>> final : true_type{} ;
 
 template <class Object>
 size_t distance(Object first, Object last)
@@ -302,7 +301,7 @@ struct value_traits_imp<Object, true> {
 
 template <class Object>
 struct value_traits{
-    static constexpr bool is_map = mystd::is_pair_u<Object>::value;
+    static constexpr bool is_map = mystd::is_pair<Object>::value;
 
     using value_traits_type = value_traits_imp<Object, is_map>;
 
@@ -371,8 +370,8 @@ class hashtable{
     using node_ptr_type = hashtableNode*;
     using bucket_type   = std::vector<node_ptr_type>;
 
-    std::allocator<Object>        data_allocator;
-    std::allocator<hashtableNode> node_allocator;
+    std::allocator<Object>        data_alloc;
+    std::allocator<hashtableNode> node_alloc;
 
   private:
     hashtableNode*               node_ptr;
@@ -462,6 +461,7 @@ class hashtable{
         clear();
     }
 
+  public:
     iterator begin() noexcept
     {
         return Begin();
@@ -1016,13 +1016,13 @@ class hashtable{
     template<class ... Args >
     node_ptr_type create_node(Args&& ... args )
     {
-        node_ptr_type tmp = node_allocator.allocate(1);
+        node_ptr_type tmp = node_alloc.allocate(1);
         try{
-            data_allocator.construct(std::addressof(tmp->value), std::forward<Args>(args)...);
+            std::allocator_traits<std::allocator<Object>>::construct(data_alloc,&(tmp -> value),std::forward<Args>(args)... );
             tmp -> next = nullptr;
         }
         catch(...){
-            node_allocator.deallocate(tmp, sizeof(hashtableNode));
+            node_alloc.deallocate(tmp, sizeof(hashtableNode));
             throw;
         }
 
@@ -1031,8 +1031,8 @@ class hashtable{
 
     void destroy_node(node_ptr_type node )
     {
-        data_allocator.destroy(std::addressof(node->value));
-        node_allocator.deallocate(node, sizeof(13944241933));
+        std::allocator_traits<std::allocator<Object>>::destroy(data_alloc, &(node->value));
+        node_alloc.deallocate(node, sizeof(node));
         node = nullptr;
     }
 

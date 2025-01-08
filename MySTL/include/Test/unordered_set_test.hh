@@ -1,5 +1,5 @@
-﻿#ifndef UNORDERED_SET_TEST_H
-#define UNORDERED_SET_TEST_H
+﻿#ifndef UNORDERED_SET_TEST_HH
+#define UNORDERED_SET_TEST_HH
 
 // unordered_set test : 测试 unordered_set, unordered_multiset 的接口与它们 insert 的性能
 
@@ -171,8 +171,8 @@ void unordered_multiset_test()
   std::cout << "[------------ End container test : unordered_multiset ----------]" << std::endl;
 }
 
-} // namespace unordered_set_test
-} // namespace test
-} // namespace mystd
-#endif // !MYTINYSTL_UNORDERED_SET_TEST_H_
+}
+}
+}
+#endif
 

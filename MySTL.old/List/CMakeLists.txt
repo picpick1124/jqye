@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.25)
+
+make_minimum_required(VERSION 3.25)
 project(List)
 
 set(CMAKE_CXX_COMPILER clang++)

@@ -53,6 +53,9 @@ int Test::multiply( int &res, const int a, const int b)
 
 void function_test( ThreadPool& pool )
 {
+    mtx.lock();
+	std::cout << "\n\n === The test for function === \n\n";
+    mtx.unlock();
     int result = 0;
 
     // 提交乘法操作，总共30个
@@ -76,6 +79,9 @@ void function_test( ThreadPool& pool )
 
 void lambda_test( ThreadPool& pool )
 {
+    mtx.lock();
+	std::cout << "\n\n === The test for lambda === \n\n";
+    mtx.unlock();
     int result = 0;
 
     // 提交乘法操作，总共30个
@@ -117,6 +123,9 @@ void lambda_test( ThreadPool& pool )
 
 void class_test(ThreadPool& pool )
 {
+    mtx.lock();
+	std::cout << "\n\n=== The test for class === \n\n";
+    mtx.unlock();
     Test test;
 
     int result = 0;

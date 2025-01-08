@@ -1,5 +1,5 @@
-﻿#ifndef UNORDERED_MAP_TEST_H
-#define UNORDERED_MAP_TEST_H
+﻿#ifndef UNORDERED_MAP_TEST_HH
+#define UNORDERED_MAP_TEST_HH
 
 // unordered_map test : 测试 unordered_map, unordered_multimap 的接口与它们 insert 的性能
 
@@ -208,8 +208,8 @@ void unordered_multimap_test()
   std::cout << "[----------- End container test : unordered_multimap -----------]" << std::endl;
 }
 
-} // namespace unordered_map_test
-} // namespace test
-} // namespace mystd
+}
+}
+}
 #endif // !MYTINYSTL_UNORDERED_MAP_TEST_H_
 

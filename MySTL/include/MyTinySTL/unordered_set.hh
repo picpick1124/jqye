@@ -3,7 +3,7 @@
 #define UNORDERED_SET_HH
 
 
-#include "hashtable.h"
+#include "hashtable.hh"
 
 
 namespace mystd{
@@ -82,6 +82,7 @@ class unordered_set{
         return *this;
     }
 
+  public:
     // 特性操作
     size_t size() const noexcept
     {
@@ -364,7 +365,7 @@ class unordered_multiset{
         return *this;
     }
 
-
+  public:
     // 特性操作
     size_t size() const noexcept
     {

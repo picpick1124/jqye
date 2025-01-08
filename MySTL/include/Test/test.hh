@@ -1,5 +1,5 @@
-﻿#ifndef MYTINYSTL_TEST_H
-#define MYTINYSTL_TEST_H
+﻿#ifndef MYSTL_TEST_HH
+#define MYSTL_TEST_HH
 
 // 一个简单的单元测试框架，定义了两个类 TestCase 和 UnitTest，以及一系列用于测试的宏
 

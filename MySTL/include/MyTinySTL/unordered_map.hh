@@ -87,6 +87,7 @@ class unordered_map{
         return *this;
     }
 
+  public:
     // 特性操作
     size_t size() const noexcept
     {
@@ -372,6 +373,7 @@ class unordered_multimap{
 
     ~unordered_multimap() = default;
 
+  public:
     // 赋值操作
     unordered_multimap& operator=(const unordered_multimap& rhs)
     {

@@ -128,12 +128,12 @@ class WINDOWS_MACRO ThreadPool{
         using std::function;
         using std::bind;
         using std::packaged_task;
-        function<decltype(forward<Function>(f)(forward<Args>(args)...))()> func =
-                bind( forward<Function>(f), forward<Args>(args)...);
+        function<decltype(std::forward<Function>(f)(std::forward<Args>(args)...))()> func =
+                bind( std::forward<Function>(f), std::forward<Args>(args)...);
         // 连接函数和参数定义，特殊函数类型，避免左右值错误
 
         auto ptr = std::make_shared
-                   <packaged_task<decltype(forward<Function>(f)(forward<Args>(args)...))()>>(func);
+                   <packaged_task<decltype(std::forward<Function>(f)(std::forward<Args>(args)...))()>>(func);
 
         function<void()> element = [ptr]() {
             (*ptr)();
